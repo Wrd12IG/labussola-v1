@@ -220,9 +220,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 @media (max-width: 860px) {
   .topbar-tagline { display: none; }
-  .topbar-links { gap: 14px; }
+  .topbar-links { gap: 14px; flex: 1 1 auto; }
   .topbar-link-text { display: none; }
-  .topbar .container { justify-content: flex-end; }
+  .topbar .container { justify-content: flex-start; }
+  .pill-tel { margin-left: auto; }
 }
 
 /* ==========================================================================
@@ -1160,11 +1161,32 @@ textarea.field-input { border-radius: var(--radius-md); resize: vertical; min-he
 /* ==========================================================================
    Trust bar
    ========================================================================== */
-.trustbar { background: var(--navy-900); color: #fff; padding: 18px 0; }
+.trustbar { background: var(--navy-900); color: #fff; padding: 18px 0; overflow: hidden; }
 .trustbar-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 30px; font-size: 13.5px; }
-.trustbar-item { display: inline-flex; align-items: center; gap: 9px; color: rgba(255,255,255,.85); }
+.trustbar-item { display: inline-flex; align-items: center; gap: 9px; color: rgba(255,255,255,.85); white-space: nowrap; }
 .trustbar-item svg { width: 18px; height: 18px; color: var(--green); flex: none; }
 .trustbar-item strong { color: #fff; }
+.trustbar-item--dup { display: none; }
+
+@media (max-width: 860px) {
+  .trustbar-row {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: max-content;
+    gap: 40px;
+    animation: trustbarMarquee 20s linear infinite;
+  }
+  .trustbar-item--dup { display: inline-flex; }
+  .trustbar:hover .trustbar-row,
+  .trustbar:focus-within .trustbar-row { animation-play-state: paused; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trustbar-row { animation: none !important; }
+}
+@keyframes trustbarMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
 
 /* ==========================================================================
    Cosa facciamo (pilastri)
