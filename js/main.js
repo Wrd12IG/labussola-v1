@@ -227,11 +227,18 @@
     });
   });
 
-  /* ---------- FAQ: accordion ---------- */
+  /* ---------- FAQ: accordion (una sola voce aperta alla volta) ---------- */
   document.querySelectorAll(".faq-q").forEach((q) => {
     q.addEventListener("click", () => {
       const item = q.closest(".faq-item");
+      const grid = q.closest(".faq-grid") || document;
       const open = item.dataset.open === "true";
+      grid.querySelectorAll(".faq-item").forEach((other) => {
+        if (other === item) return;
+        other.dataset.open = "false";
+        const otherQ = other.querySelector(".faq-q");
+        if (otherQ) otherQ.setAttribute("aria-expanded", "false");
+      });
       item.dataset.open = open ? "false" : "true";
       q.setAttribute("aria-expanded", open ? "false" : "true");
     });
