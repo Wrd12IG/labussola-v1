@@ -131,41 +131,20 @@
   );
   revealEls.forEach((el) => reveal.observe(el));
 
-  /* ---------- Reviews carousel ---------- */
-  const slider = document.getElementById("review-slider");
-  const slides = Array.from(slider.querySelectorAll(".review-slide"));
-  const dotsWrap = document.getElementById("review-dots");
-  let current = 0;
-  let autoplayTimer;
-
-  slides.forEach((_, i) => {
-    const dot = document.createElement("button");
-    dot.setAttribute("aria-label", `Recensione ${i + 1}`);
-    if (i === 0) dot.classList.add("is-active");
-    dot.addEventListener("click", () => goToSlide(i, true));
-    dotsWrap.appendChild(dot);
-  });
-  const dots = Array.from(dotsWrap.children);
-
-  function goToSlide(index, userTriggered) {
-    slides[current].classList.remove("is-active");
-    dots[current].classList.remove("is-active");
-    current = (index + slides.length) % slides.length;
-    slides[current].classList.add("is-active");
-    dots[current].classList.add("is-active");
-    if (userTriggered) restartAutoplay();
+  /* ---------- Recensioni: griglia scorrevole ---------- */
+  const reviewTrack = document.getElementById("review-track");
+  if (reviewTrack) {
+    const reviewStep = () => {
+      const card = reviewTrack.querySelector(".review-card");
+      if (!card) return 0;
+      const style = getComputedStyle(reviewTrack);
+      return card.getBoundingClientRect().width + parseFloat(style.columnGap || style.gap || 0);
+    };
+    const reviewNext = document.getElementById("review-next");
+    const reviewPrev = document.getElementById("review-prev");
+    if (reviewNext) reviewNext.addEventListener("click", () => reviewTrack.scrollBy({ left: reviewStep(), behavior: "smooth" }));
+    if (reviewPrev) reviewPrev.addEventListener("click", () => reviewTrack.scrollBy({ left: -reviewStep(), behavior: "smooth" }));
   }
-  function nextSlide() { goToSlide(current + 1); }
-  function restartAutoplay() {
-    clearInterval(autoplayTimer);
-    autoplayTimer = setInterval(nextSlide, 6000);
-  }
-  restartAutoplay();
-  slider.addEventListener("mouseenter", () => clearInterval(autoplayTimer));
-  slider.addEventListener("mouseleave", restartAutoplay);
-
-  document.getElementById("review-next").addEventListener("click", () => goToSlide(current + 1, true));
-  document.getElementById("review-prev").addEventListener("click", () => goToSlide(current - 1, true));
 
   /* ---------- Forms (simulated — no backend wired up) ---------- */
   const quoteForm = document.getElementById("quote-form");
